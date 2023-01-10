@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/presentation-common" />
             <option value="$PROJECT_DIR$/presentation-converter" />
+            <option value="$PROJECT_DIR$/presentation-history" />
           </set>
         </option>
       </GradleProjectSettings>

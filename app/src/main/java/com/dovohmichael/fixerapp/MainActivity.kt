@@ -6,10 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dovohmichael.fixerapp.ui.theme.FixerAppTheme
 import com.dovohmichael.fixerapp.presentation_common.navigation.NavRoutes
 import com.dovohmichael.fixerapp.presentation_converter.*
+import com.dovohmichael.fixerapp.presentation_history.HistoryScreen
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,6 +50,7 @@ fun App(navController: NavHostController) {
             route = NavRoutes.History.route,
             arguments = NavRoutes.History.arguments
         ) {
+            HistoryScreen(hiltViewModel(),modifier = Modifier,navController,NavRoutes.History.fromEntry(it))
            /* PostScreen(
                 hiltViewModel(),
                 NavRoutes.Post.fromEntry(it)

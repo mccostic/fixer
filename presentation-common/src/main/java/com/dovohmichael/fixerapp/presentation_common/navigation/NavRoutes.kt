@@ -6,7 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 private const val ROUTE_HOME = "home"
-private const val ROUTE_HISTORY = "history/%s,%s"
+private const val ROUTE_HISTORY = "history?%s,%s"
 private const val ARG_HISTORY_BASE_CURRENCY = "baseCurrency"
 private const val ARG_HISTORY_TARGET_CURRENCY = "targetCurrency"
 

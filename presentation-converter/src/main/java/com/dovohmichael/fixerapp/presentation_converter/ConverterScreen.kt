@@ -21,10 +21,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.dovohmichael.fixerapp.presentation_common.navigation.HistoryInput
+import com.dovohmichael.fixerapp.presentation_common.navigation.NavRoutes
 
 import com.dovohmichael.fixerapp.presentation_common.state.CommonScreen
-import com.dovohmichael.fixerapp.presentation_common.state.Error
-import com.dovohmichael.fixerapp.presentation_common.state.Loading
+
 import com.dovohmichael.fixerapp.presentation_common.state.UiState
 
 @Composable
@@ -42,34 +43,37 @@ fun ConverterScreen(
     var rate by rememberSaveable {
         mutableStateOf("")
     }
-    /*viewModel.convertedRateFlow.collectAsState().value.let { state->
-        rate = when (state) {
+
+    // val convertCurrency =   viewModel.convertedRateFlow.collectAsState()
+    viewModel.convertedRateFlow.collectAsState().value.let {
+        when (it) {
             is UiState.Initial -> {
-                ""
+                rate = ""
             }
             is UiState.Loading -> {
-                "Calculating..."
-            }
-            is UiState.Error -> {
-                state.errorMessage
+                rate =""
             }
             is UiState.Success -> {
-                val rateModel = state.data
-
-                (rateModel.rate * baseAmount.toDouble()).toString()
+                rate = if(baseAmount.isNotEmpty() && baseAmount.toDoubleOrNull()!=null)
+                    String.format("%.3f",it.data.rate * baseAmount.toDouble())
+                else "cannot convert type"
             }
-
+            is UiState.Error->{
+                rate = it.errorMessage
+            }
         }
-    }*/
-
-    viewModel.loadCurrencies()
-    viewModel.currencyListFlow.collectAsState().value.let { state ->
-        CommonScreen(state = state) {
-            currencyListModel->
-            Column(modifier = Modifier.padding(24.dp, 0.dp)) {
+    }
 
 
-                Spacer(modifier = Modifier.height(40.dp))
+    Column(modifier = Modifier.padding(24.dp, 0.dp)) {
+
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+
+        viewModel.currencyListFlow.collectAsState().value.let { state ->
+            CommonScreen(state = state) {
+                    currencyListModel->
                 Row(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -108,7 +112,8 @@ fun ConverterScreen(
                             viewModel.convert(
                                 baseCurrencySymbol,
                                 targetCurrencySymbol,
-                                baseAmount.toDouble()
+                                baseAmount.toDouble(),
+                                date="2023-01-09"
                             )
                         }
 //                    currencyViewModel.setFromCurrency(targetCurrencySymbol)
@@ -145,113 +150,92 @@ fun ConverterScreen(
 
 
                 }
-                Spacer(modifier = Modifier.height(32.dp))
-
-
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    CurrencyRateTextField(
-                        baseCurrencySymbol,
-                        modifier.weight(1.0f),
-                        readOnly = false,
-                        value = baseAmount,
-                        enabled = true,
-                        onBaseAmountChanged = { newBaseAmount ->
-                            baseAmount = newBaseAmount
-                            // currencyViewModel.updateBase(it)
-
-                            if (newBaseAmount.isNotEmpty()) {
-                                viewModel.convert(
-                                    baseCurrencySymbol,
-                                    targetCurrencySymbol,
-                                    newBaseAmount.toDouble()
-                                )
-
-
-                            }
-                        }
-                    )
-                    Spacer(modifier = Modifier
-                        .height(16.dp)
-                        .weight(0.1f))
-                    //base currency picker
-                    CurrencyRateTextField(
-                        targetCurrencySymbol,
-                        modifier.weight(1.0f),
-                        readOnly = false,
-                        value = rate,
-                        /*value = data.convertedAmount,
-*/
-                        enabled = false,
-
-                        onBaseAmountChanged = {
-
-                        }
-                    )
-
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Button(
-                    elevation = null,
-                    onClick = {
-
-                        //val route = ScreenItems.History.route
-                        //.replace(oldValue = "{target}", newValue = targetCurrencySymbol)
-                        navController.currentBackStackEntry?.arguments?.apply {
-                            putString("base",baseCurrencySymbol)
-                            putString("target",targetCurrencySymbol)
-                        }
-                        navController.navigate("history?" +
-                                "base=$baseCurrencySymbol," +
-                                "target=$targetCurrencySymbol"
-                        ){
-                            navController.graph.startDestinationRoute?.let { route ->
-                                popUpTo(route) {
-                                    saveState = true
-                                }
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-
-                    },
-                    modifier = Modifier
-                        .height(50.dp)
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(6.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.primaryVariant,
-                        contentColor = Color.White
-                    )
-                ) {
-                    //convert text
-                    Text(
-                        text = stringResource(R.string.detail_text),
-                        fontWeight = FontWeight.Bold, fontSize = 16.sp
-                    )
-                }
-
-                //vertical spacing between convert button and promo text
-                Spacer(modifier = Modifier.height(16.dp))
-
-
             }
-            /*PostList(it, { postListItem ->
-                viewModel.updateInteraction(it.interaction)
-                navController.navigate(NavRoutes.Post.routeForPost(PostInput(postListItem.id)))
-            }) { postListItem ->
-                viewModel.updateInteraction(it.interaction)
-                navController.navigate(NavRoutes.User.routeForUser(UserInput(postListItem.userId)))
-            }*/
         }
+        Spacer(modifier = Modifier.height(32.dp))
+
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            CurrencyRateTextField(
+                baseCurrencySymbol,
+                modifier.weight(1.0f),
+                readOnly = false,
+                value = baseAmount,
+                enabled = true,
+                onBaseAmountChanged = { newBaseAmount ->
+                    baseAmount = newBaseAmount
+                    // currencyViewModel.updateBase(it)
+
+                    if (newBaseAmount.isNotEmpty() && newBaseAmount.toDoubleOrNull()!=null) {
+                        viewModel.convert(
+                            baseCurrencySymbol,
+                            targetCurrencySymbol,
+                            newBaseAmount.toDouble(), date = "2023-01-09"
+                        )
+
+
+                    }
+                }
+            )
+            Spacer(modifier = Modifier
+                .height(16.dp)
+                .weight(0.1f))
+            //base currency picker
+            CurrencyRateTextField(
+                targetCurrencySymbol,
+                modifier.weight(1.0f),
+                readOnly = false,
+                value = rate,
+                /*value = data.convertedAmount,
+*/
+                enabled = false,
+
+                onBaseAmountChanged = {
+
+                }
+            )
+
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            elevation = null,
+            onClick = {
+
+                navController.navigate(NavRoutes.History.routeForHistory(HistoryInput(baseCurrencySymbol,targetCurrencySymbol)))
+
+
+
+            },
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(6.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.primaryVariant,
+                contentColor = Color.White
+            )
+        ) {
+            //convert text
+            Text(
+                text = stringResource(R.string.detail_text),
+                fontWeight = FontWeight.Bold, fontSize = 16.sp
+            )
+        }
+
+        //vertical spacing between convert button and promo text
+        Spacer(modifier = Modifier.height(16.dp))
+
+
     }
+
 }
 
 /*

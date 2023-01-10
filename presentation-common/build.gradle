@@ -48,6 +48,7 @@ dependencies {
     implementation androidx.composeUi
     implementation androidx.composeMaterial
     implementation androidx.viewModelKtx
+    implementation material.materialIcons
     implementation androidx.viewModelCompose
     implementation androidx.lifecycleRuntimeKtx
     implementation androidx.navigationCompose

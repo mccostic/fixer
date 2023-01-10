@@ -1,27 +1,23 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
 
 android {
+    namespace 'com.dovohmichael.fixerapp.presentation_history'
     compileSdk defaultCompileSdkVersion
 
     defaultConfig {
-        applicationId "com.dovohmichael.fixerapp"
         minSdk defaultMinSdkVersion
         targetSdk defaultTargetSdkVersion
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
-
+        consumerProguardFiles "consumer-rules.pro"
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -34,6 +30,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = jvmTarget
+
     }
     buildFeatures {
         compose true
@@ -41,33 +38,23 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion versions.compose
     }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
-    }
 }
 
 dependencies {
-    implementation(project(path: ":presentation-converter"))
-    implementation(project(path: ":presentation-history"))
-    implementation(project(path: ":presentation-common"))
+
     implementation(project(path: ":domain"))
-    implementation(project(path: ":data-remote"))
-    implementation(project(path: ":data-local"))
-    implementation(project(path: ":data-repository"))
-    implementation androidx.core
-    implementation androidx.appCompat
-    implementation material.material
-    implementation material.materialIcons
+    implementation(project(path: ":presentation-common"))
+    implementation coroutines.coroutinesAndroid
     implementation androidx.composeUi
     implementation androidx.composeMaterial
-    implementation androidx.composeUiToolingPreview
+    implementation material.materialIcons
+    implementation androidx.viewModelKtx
+    implementation androidx.viewModelCompose
     implementation androidx.lifecycleRuntimeKtx
-    implementation androidx.composeActivity
     implementation androidx.navigationCompose
-    implementation androidx.hiltNavigationCompose
     implementation di.hiltAndroid
     kapt di.hiltCompiler
     testImplementation test.junit
+    testImplementation test.coroutines
+    testImplementation test.mockito
 }

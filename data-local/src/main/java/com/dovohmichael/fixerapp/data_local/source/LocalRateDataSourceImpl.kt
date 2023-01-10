@@ -32,8 +32,8 @@ class LocalRateDataSourceImpl @Inject constructor(private val rateDao: RateDao) 
     private fun getId(base: String, target: String, date: String) =  "${base}:${target}:${date}"
 
     override fun getRate(base: String, target: String, date: String): Flow<List<Rate>> =
-        rateDao.getRate(id = getId(base = base, target = target, date = date)).map { posts ->
-            posts.map {
+        rateDao.getRate(id = getId(base = base, target = target, date = date)).map { rates ->
+            rates.map {
                 Rate(base=it.base,target=it.target, date=it.date, timestamp = it.timestamp, rate = it.rate)
             }
         }

@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +25,10 @@ class CurrencyConverterViewModel @Inject constructor(
 
 ) : ViewModel() {
 
+
+    init {
+        loadCurrencies()
+    }
     private val _currencyListFlow =
         MutableStateFlow<UiState<CurrencyListModel>>(UiState.Loading)
     val currencyListFlow: StateFlow<UiState<CurrencyListModel>> = _currencyListFlow
@@ -31,7 +37,7 @@ class CurrencyConverterViewModel @Inject constructor(
         MutableStateFlow<UiState<RateModel>>(UiState.Initial)
     val convertedRateFlow: StateFlow<UiState<RateModel>> = _convertedRateFlow
 
-    fun loadCurrencies() {
+    private fun loadCurrencies() {
         viewModelScope.launch {
             useCase.execute(GetCurrenciesUseCase.Request)
                 .map {
@@ -39,6 +45,10 @@ class CurrencyConverterViewModel @Inject constructor(
                     currencyConverter.convert(it)
                 }
                 .collect {
+                    if(it is UiState.Error){
+                        val its = it.errorMessage
+                        Log.d("CURRENCIESEROR", its)
+                    }
                     _currencyListFlow.value = it
                 }
         }
@@ -46,16 +56,23 @@ class CurrencyConverterViewModel @Inject constructor(
 
     fun onCurrencyChanged(baseCurrencySymbol: String, baseAmount: String, targetCurrencySymbol: String) {
 
+        if(baseCurrencySymbol.isNotEmpty() && targetCurrencySymbol.isNotEmpty() && baseAmount.toDoubleOrNull()!=null)
+        convert(baseCurrencySymbol = baseCurrencySymbol, targetCurrencySymbol = targetCurrencySymbol, baseAmount = baseAmount.toDouble(),
+            date = "2023-01-09")
     }
 
-    fun convert(baseCurrencySymbol: String, targetCurrencySymbol: String, baseAmount: Double) {
+    fun convert(baseCurrencySymbol: String, targetCurrencySymbol: String, baseAmount: Double,date:String) {
         viewModelScope.launch {
-            getRateUseCase.execute(GetRateUseCase.Request(base = baseCurrencySymbol,target=targetCurrencySymbol,date="2023-01-09"))
+            getRateUseCase.execute(GetRateUseCase.Request(base = baseCurrencySymbol,target=targetCurrencySymbol,date=date))
                 .map {
                     Log.d("convert_currency", it.toString())
                     rateConverter.convert(it)
                 }
                 .collect {
+                    if(it is UiState.Error){
+                        val its = it.errorMessage
+                        Log.d("convertERRR", its)
+                    }
                     _convertedRateFlow.value = it
                 }
         }

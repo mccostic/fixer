@@ -1,6 +1,7 @@
 package com.dovohmichael.fixerapp.domain.usecase
 
 
+import android.util.Log
 import com.dovohmichael.fixerapp.domain.entity.Currency
 import com.dovohmichael.fixerapp.domain.entity.Rate
 import com.dovohmichael.fixerapp.domain.repository.CurrencyRepository
@@ -20,7 +21,9 @@ class GetRateUseCase @Inject constructor(
     override fun process(request:Request): Flow<Response> =
         rateRepository.getRate(base = request.base, target = request.target, date = request.date)
             .map {
-                Response(it.first())
+                list->
+                Log.d("GetRateUseCase", list.toString())
+                Response(list.firstOrNull()!!)
             }
 
 
