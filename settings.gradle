@@ -1,0 +1,24 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "FixerApp"
+include ':app'
+
+
+include ':domain'
+include ':data-local'
+include ':data-remote'
+include ':data-repository'
+include ':presentation-common'
+include ':presentation-converter'
