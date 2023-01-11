@@ -34,8 +34,8 @@ class CurrencyConverterViewModel @Inject constructor(
     val currencyListFlow: StateFlow<UiState<CurrencyListModel>> = _currencyListFlow
 
     private val _convertedRateFlow =
-        MutableStateFlow<UiState<RateModel>>(UiState.Initial)
-    val convertedRateFlow: StateFlow<UiState<RateModel>> = _convertedRateFlow
+        MutableStateFlow<UiState<List<RateModel>>>(UiState.Initial)
+    val convertedRateFlow: StateFlow<UiState<List<RateModel>>> = _convertedRateFlow
 
     private fun loadCurrencies() {
         viewModelScope.launch {
@@ -56,7 +56,7 @@ class CurrencyConverterViewModel @Inject constructor(
 
     fun onCurrencyChanged(baseCurrencySymbol: String, baseAmount: String, targetCurrencySymbol: String) {
 
-        if(baseCurrencySymbol.isNotEmpty() && targetCurrencySymbol.isNotEmpty() && baseAmount.toDoubleOrNull()!=null)
+
         convert(baseCurrencySymbol = baseCurrencySymbol, targetCurrencySymbol = targetCurrencySymbol, baseAmount = baseAmount.toDouble(),
             date = "2023-01-09")
     }
@@ -73,6 +73,10 @@ class CurrencyConverterViewModel @Inject constructor(
                         val its = it.errorMessage
                         Log.d("convertERRR", its)
                     }
+
+
+                    Log.d("convert", it.toString())
+                   //_convertedRateFlow.value = it
                     _convertedRateFlow.value = it
                 }
         }

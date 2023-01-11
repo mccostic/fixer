@@ -53,6 +53,7 @@ dependencies {
     implementation androidx.lifecycleRuntimeKtx
     implementation androidx.navigationCompose
     implementation di.hiltAndroid
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
     kapt di.hiltCompiler
     testImplementation test.junit
     testImplementation test.coroutines

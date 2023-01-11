@@ -10,10 +10,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class RateConverter @Inject constructor(@ApplicationContext private val context: Context) :
-    CommonResultConverter<GetRateUseCase.Response, RateModel>() {
+    CommonResultConverter<GetRateUseCase.Response, List<RateModel>>() {
 
-    override fun convertSuccess(data: GetRateUseCase.Response): RateModel {
+    override fun convertSuccess(data: GetRateUseCase.Response): List<RateModel> {
 
-        return RateModel(base = data.rate.base, target = data.rate.target,date=data.rate.date, timestamp = data.rate.timestamp, rate = data.rate.rate)
+        return data.rate.map {
+            RateModel(base = it.base, target = it.target,date=it.date,
+                timestamp = it.timestamp, rate = it.rate)
+        }
+
+
     }
 }

@@ -25,7 +25,7 @@ class RateRepositoryImpl @Inject constructor(
 
 
     override fun getRate(base: String, target: String, date: String): Flow<List<Rate>> =
-        localRateDataSource.getRate(base=base,target=target,date=date).onEach {
+        localRateDataSource.getRate(base=base,target=target,date=date).distinctUntilChanged().onEach {
 
             if (it.isEmpty()) {
                 Log.d("localRateDataSource",it.toString())
@@ -33,7 +33,7 @@ class RateRepositoryImpl @Inject constructor(
                     .onEach { it2 ->
                         Log.d("remoteRateDataSource",it2.toString())
                         localRateDataSource.addRate(it2)
-                    }.catch { error->  Log.d("getRateError",error.toString())}.collect()
+                    }.catch { error->  Log.d("getRateError",error.toString())}.distinctUntilChanged().collect()
 
             }
         }

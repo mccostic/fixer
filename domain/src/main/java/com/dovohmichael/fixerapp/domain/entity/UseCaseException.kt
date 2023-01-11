@@ -6,6 +6,8 @@ sealed class UseCaseException(cause: Throwable) : Throwable(cause) {
 
     class RateException(cause: Throwable) : UseCaseException(cause)
 
+    class HistoryRateException(cause: Throwable) : UseCaseException(cause)
+
     class UnknownException(cause: Throwable) : UseCaseException(cause)
 
 

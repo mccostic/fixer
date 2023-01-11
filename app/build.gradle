@@ -68,6 +68,7 @@ dependencies {
     implementation androidx.navigationCompose
     implementation androidx.hiltNavigationCompose
     implementation di.hiltAndroid
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
     kapt di.hiltCompiler
     testImplementation test.junit
 }

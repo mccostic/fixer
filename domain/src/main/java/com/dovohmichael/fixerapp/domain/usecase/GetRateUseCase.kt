@@ -23,13 +23,13 @@ class GetRateUseCase @Inject constructor(
             .map {
                 list->
                 Log.d("GetRateUseCase", list.toString())
-                Response(list.firstOrNull()!!)
+                Response(list)
             }
 
 
     data class Request(val base:String,val target:String,val date:String) : UseCase.Request
 
     data class Response(
-        val rate: Rate,
+        val rate: List<Rate> = listOf(),
     ) : UseCase.Response
 }

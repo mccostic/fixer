@@ -55,7 +55,9 @@ fun ConverterScreen(
             }
             is UiState.Success -> {
                 rate = if(baseAmount.isNotEmpty() && baseAmount.toDoubleOrNull()!=null)
-                    String.format("%.3f",it.data.rate * baseAmount.toDouble())
+                    String.format("%.3f",
+                        it.data.firstOrNull()?.rate?.times(baseAmount.toDouble()) ?: 0.0
+                    )
                 else "cannot convert type"
             }
             is UiState.Error->{
