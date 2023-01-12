@@ -3,9 +3,7 @@ package com.dovohmichael.fixerapp.presentation_history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dovohmichael.fixerapp.domain.usecase.GetCurrenciesUseCase
 import com.dovohmichael.fixerapp.domain.usecase.GetHistoryRateUseCase
-import com.dovohmichael.fixerapp.domain.usecase.GetRateUseCase
 import com.dovohmichael.fixerapp.presentation_common.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +12,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
-import org.threeten.bp.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +35,11 @@ class HistoryViewModel @Inject constructor(
         val zoneId = ZoneId.systemDefault()
         return LocalDate.now(zoneId).minusDays(minusDays).toString()
     }
+
+    fun filterHistoryCurrencies(items:List<HistoryRateListItemModel>,target:String) =  items.filter { history->history.target ==target }
+
+    fun filterOtherCurrencies(items:List<HistoryRateListItemModel>,target:String)= items.filter { history->history.target !=target && history.date == getDate(0)}
+
     fun getHistoryRates(base:String,target:String, endDate:String,startDate:String) {
         viewModelScope.launch {
             useCase.execute(GetHistoryRateUseCase.Request(base = base, target = target, startDate = startDate, endDate = endDate))

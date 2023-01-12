@@ -9,11 +9,8 @@ import com.dovohmichael.fixerapp.presentation_common.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,12 +50,14 @@ class CurrencyConverterViewModel @Inject constructor(
                 }
         }
     }
+    private fun getDate(minusDays:Long =0): String {
+        val zoneId = org.threeten.bp.ZoneId.systemDefault()
+        return org.threeten.bp.LocalDate.now(zoneId).minusDays(minusDays).toString()
+    }
 
     fun onCurrencyChanged(baseCurrencySymbol: String, baseAmount: String, targetCurrencySymbol: String) {
-
-
         convert(baseCurrencySymbol = baseCurrencySymbol, targetCurrencySymbol = targetCurrencySymbol, baseAmount = baseAmount.toDouble(),
-            date = "2023-01-09")
+            date = getDate())
     }
 
     fun convert(baseCurrencySymbol: String, targetCurrencySymbol: String, baseAmount: Double,date:String) {

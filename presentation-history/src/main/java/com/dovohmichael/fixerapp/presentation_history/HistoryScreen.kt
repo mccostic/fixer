@@ -4,23 +4,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.dovohmichael.fixerapp.presentation_common.navigation.HistoryInput
 import com.dovohmichael.fixerapp.presentation_common.state.CommonScreen
-import com.dovohmichael.fixerapp.presentation_common.state.UiState
 
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel,
-    modifier: Modifier,
-    navController: NavController,
     input: HistoryInput
 ) {
     val base by rememberSaveable {
@@ -44,7 +38,7 @@ fun HistoryScreen(
                    LazyColumn(modifier = Modifier
                        .weight(1.0f)
                        .fillMaxWidth()) {
-                       items(historyRateListModel.items.filter { history->history.target ==target }) { history ->
+                       items(viewModel.filterHistoryCurrencies(historyRateListModel.items,target)) { history ->
                            HistoryItem(
                                history = history,
                                onEditClick = {
@@ -60,7 +54,7 @@ fun HistoryScreen(
                        .weight(1.0f)
                        .fillMaxWidth()
                    ) {
-                       items(historyRateListModel.items.filter { history->history.target !=target }) { history ->
+                       items(viewModel.filterOtherCurrencies(historyRateListModel.items,target)) { history ->
                            HistoryItem(
                                history = history,
                                onEditClick = {
